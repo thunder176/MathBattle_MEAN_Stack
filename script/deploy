@@ -1,7 +1,8 @@
 #!/bin/sh
-
-ssh app@54.64.137.215 <<EOF
-	cd ~/hello-jenkins
+forever restartall
+<<EOF
+	ssh app@54.64.137.215 
+	cd ~//var/lib/jenkins/jobs/Math_Battle_G1_Deploy
 	git pull
 	npm install --production
 	forever restartall
