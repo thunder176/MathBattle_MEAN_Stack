@@ -1,0 +1,35 @@
+<div class="jumbotron text-center">
+	<h1>Login</h1>
+    <div id="login" ng-controller="MainController">
+        <form class="form-horizontal" ng-submit="userLogin()">
+            <div class="control-group">
+                <label class="control-label" for="inputEmail">Email</label>
+                <div class="controls">
+                    <input type="text" id="inputEmail" placeholder="Email" ng-model="login.email">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="inputPassword">Password</label>
+                <div class="controls">
+                    <input type="password" id="inputPassword" placeholder="Password" ng-model="login.password">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <label class="checkbox">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <button type="submit" class="btn btn-success">Sign in</button>
+                    <button type="button" class="btn btn-register" ng-click="">Register</button>
+                </div>
+            </div>
+        </form>
+        <!--<script>-->
+            <!--$scope.login = function($scope, socketFactory){-->
+                <!--var usrInfo = {email : $scope.login.email, pwd : $scope.login.password};-->
+                <!--socketFactory.emit('login', usrInfo);-->
+            <!--}-->
+        <!--</script>-->
+    </div>
+    <p>{{ tagline }}</p>
+</div>
