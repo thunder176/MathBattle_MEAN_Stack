@@ -2,11 +2,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var UserSchema = new Schema({
-	id: String,
-	pwd: String,
-	score: Number
+var recordSchema = new Schema({
+    date: { type: Date, default: Date.now },
+    winner: [{id: String}]
 });
 
 // module.exports allows us to pass this to other files when it is called
-module.exports = mongoose.model('user', UserSchema);
+module.exports = mongoose.model('record', recordSchema);

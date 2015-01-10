@@ -1,5 +1,42 @@
 <div class="jumbotron text-center">
-	<h1>Competitions</h1>
+    <h1>Competitions question</h1>
 
-	<p>{{ tagline }}</p>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6">
+            <table class="table table-hover">
+                <tr>
+                    <td>Name</td>
+                    <td>Score</td>
+                </tr>
+                <tr ng-repeat="user in users | orderBy: '-score'">
+                    <td>{{user.name}}</td>
+                    <td>{{user.score}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <form class="form-horizontal" ng-submit="userSubmitAns()">
+            <div class="col-xs-6 col-sm-6">
+                <div>
+                    <!--<textarea class="form-control" rows="3" style="text-align:center" ng-model="userQuestions">1+1=</textarea>-->
+                    <p>{{ uesrQuestions }}</p>
+
+                    <div>
+                        <input type="text" class="form-control" placeholder="your answer" ng-model="userAns">
+                    </div>
+                    <p>{{ userAnswerStatus }}</p>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-6">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+                    <a href="#/view4">
+                        <button type="button" class="btn btn-default btn-lg btn-block">Quit</button>
+                        <div class="modal-shiftfix"></div>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
