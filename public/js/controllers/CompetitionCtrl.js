@@ -1,4 +1,4 @@
-angular.module('CompetitionCtrl', []).controller('CompetitionController', function ($scope, socketFactory, shareFactory) {
+angular.module('CompetitionCtrl', []).controller('CompetitionController', function ($scope, $location, socketFactory, shareFactory) {
 
     var questionsInFrontEnd;
     var roomId = 0;
@@ -26,6 +26,7 @@ angular.module('CompetitionCtrl', []).controller('CompetitionController', functi
     };
 
     $scope.quit = function () {
+        $location.path('/Competitions');
         location.href = '/';
     };
 
