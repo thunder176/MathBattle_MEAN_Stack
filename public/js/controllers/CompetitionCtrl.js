@@ -27,7 +27,6 @@ angular.module('CompetitionCtrl', []).controller('CompetitionController', functi
 
     $scope.quit = function () {
         $location.path('/Competitions');
-        location.href = '/';
     };
 
     socketFactory.on('mathBattleAddPlayers', function (data) {
