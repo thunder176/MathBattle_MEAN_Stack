@@ -2,6 +2,10 @@ angular.module('GeekCtrl', []).controller('GeekController', function($scope, soc
 
 	$scope.tagline = 'This is the history page';
 
+	$scope.quit = function () {
+		location.href = '/';
+	};
+
 	socketFactory.emit('historyRecord', '');
 
 	var records = [{

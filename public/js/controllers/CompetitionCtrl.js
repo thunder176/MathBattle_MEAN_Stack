@@ -25,6 +25,10 @@ angular.module('CompetitionCtrl', []).controller('CompetitionController', functi
         $scope.userAns = '';
     };
 
+    $scope.quit = function () {
+        location.href = '/';
+    };
+
     socketFactory.on('mathBattleAddPlayers', function (data) {
         roomId = data.room;
         $scope.uesrQuestions = 'Please wait for other users.\n' +
@@ -72,6 +76,7 @@ angular.module('CompetitionCtrl', []).controller('CompetitionController', functi
             }
         }
         $scope.uesrQuestions = 'Mission Complete!';
+        socketFactory.socket.reconnect();
     });
 
 });
