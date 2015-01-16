@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-var mongoose = require('mongoose');
+var dbRecord = require('./app/controllers/recordCtrl');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 
