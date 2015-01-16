@@ -1,77 +1,28 @@
 <div class="jumbotron text-center">
-	<h1>History</h1>
+    <h1>History</h1>
 
 
-            <table class="table table-bordered">
-                <thead>
-                <th>
-                    Your name
-                </th>
-                <th>
-                    Final scores
-                </th>
-                <tr>
-                    <td>
-                        Lisa
-                    </td>
-                    <td>
+    <table class="table table-bordered">
 
-                    </td>
+        <th>
+            History uer name
+        </th>
+        <th>
+            Final scores
+        </th>
 
-                </tr>
-                <thead>
-                <th>
-                    History  uer name
-                </th>
-                <th>
-                    Final scores
-                </th>
+        <tbody>
+        <tr ng-repeat="record in records | orderBy: '-score'">
+            <td>{{record.id}}</td>
+            <td>{{record.score}}</td>
+        </tr>
+        </tbody>
 
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        Tom
-                    </td>
-                    <td>
-
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        Jack
-                    </td>
-                    <td>
-
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        Merry
-                    </td>
-                    <td>
-
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        Amy
-                    </td>
-                    <td>
-
-
-                    </td>
-
-                </tr>
-
-                </tbody>
-
-                </thead>
-            </table>
+    </table>
     <div class="row">
-        <div class="col-md-6 col-md-offset-3"><button type="button" class="btn btn-primary btn-lg btn-block">Quit</button>
+        <div class="col-md-6 col-md-offset-3">
+            <button type="button" class="btn btn-primary btn-lg btn-block">Quit</button>
+        </div>
 
+    </div>
 </div>

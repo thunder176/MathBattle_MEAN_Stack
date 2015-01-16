@@ -191,6 +191,14 @@ io.on('connection', function (socket) {
         }
     });
 
+    socket.on('historyRecord', function () {
+        console.log('require for history records');
+        User.find(function(err, users) {
+            if (err) return console.error(err);
+            socket.emit('historyRecord', users);
+            //console.dir(users);
+        });
+    });
 });
 
 exports = module.exports = app; 						// expose app
