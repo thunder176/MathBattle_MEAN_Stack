@@ -3,17 +3,10 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-var dbRecord = require('./app/controllers/recordCtrl');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 
-// configuration ===========================================
-
-// config files
-var db = require('./config/db');
-
 var port = process.env.PORT || 8080; // set our port
-// mongoose.connect(db.url); // connect to our mongoDB database (commented out after you enter in your own credentials)
 
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json()); // parse application/json 
@@ -27,7 +20,25 @@ app.use(express.static(__dirname + '/public')); // set the static files location
 require('./app/routes')(app); // pass our application into our routes
 
 // db ======================================================
-var User = require('./app/models/user');
+var mongoose = require('mongoose');
+
+var db = mongoose.connection;
+
+db.on('error', console.error);
+db.once('open', function () {
+    console.log('Mongoose connection open');
+    // Create schemas and models here.
+});
+var UserSchema = new mongoose.Schema({
+    id: String,
+    pwd: String,
+    score: Number
+});
+
+var User = mongoose.model('User', UserSchema);
+
+mongoose.connect('mongodb://localhost/math-battle');
+console.log('mongoose.connect to math-battle');
 
 
 // start app ===============================================
@@ -40,6 +51,12 @@ var roomId = 0;
 var questions = [];
 var questionId = 0;
 var answers = [];
+var roomRecord = [
+    {name: '', score: 0},
+    {name: '', score: 0},
+    {name: '', score: 0},
+    {name: '', score: 0}
+];
 
 function makeAllQuestions() {
 
@@ -87,13 +104,22 @@ function calculateResult(question) {
 }
 
 io.on('connection', function (socket) {
+    console.log('user connect');
 
-    socket.on('userReady', function () {
+    socket.on('userReady', function (info) {
+        console.log('User: ' + info + ' is ready.');
+        roomRecord[numOfUsers].name = info;
+
         numOfUsers += 1;
         console.log('connected user numbers: %d', numOfUsers);
         io.emit('mathBattleAddPlayers', {user: numOfUsers, room: roomId});
 
         if (4 == numOfUsers) {
+            //var thisRoomRecord = roomRecord;
+            for (var i = 0; i < 4; i++) {
+                roomRecord[i].score = 0;
+            }
+            io.emit('mathBattleRecord', roomRecord);
             questions = makeAllQuestions();
             io.emit('mathBattleBegin', questions);
             setTimeout(sendNextQuestion, 3000);
@@ -114,16 +140,50 @@ io.on('connection', function (socket) {
     function sendNextQuestion() {
         io.emit('nextQuestion', questionId);
     }
+
     socket.on('userAnswer', function (data) {
-        console.log('userAnswer = ' + data);
-        if (parseInt(answers[questionId]) == parseInt(data)) {
-            console.log('userAnswer correct, nextQuestion');
+        console.log('user: ' + data.name + ' answer = ' + data.ans);
+        if (parseInt(answers[questionId]) == parseInt(data.ans)) {
+            console.log('user: ' + data.name + ' answer correct, nextQuestion');
             socket.emit('answerRight', '');
+            // add battle record
+            for (var i = 0; i < 4; i++) {
+                if (roomRecord[i].name == data.name) {
+                    roomRecord[i].score += 10;
+                }
+            }
+
+            // save the records in mongodb
+            // find if it's exists
+            var usrName = data.name;
+            User.findOne({id: usrName}, function (err, docs) {
+                console.log('FindOne:' + docs + "," + err);
+                if (!err) {
+                    if (!docs) {
+                        var user = new User({
+                            id: usrName,
+                            pwd: '',
+                            score: 10
+                        });
+
+                        user.save(function (err, user) {
+                            if (err) return console.error(err);
+                            console.log('Save:' + user);
+                        });
+                    } else {
+                        User.findOneAndUpdate({id: usrName}, {score: docs.score + 10}, {}, function (err, docs) {
+                            console.log('FindOneAndUpdate' + docs + "," + err);
+                        });
+                    }
+                }
+            });
+
             questionId++;
             if (10 == questionId) {
-                io.emit('allFinish', '');
+                socket.emit('allFinish', '');
+                io.emit('allFinish', data.name);
             } else {
-                io.emit('prepareNextQuestion', '');
+                io.emit('prepareNextQuestion', data.name);
                 setTimeout(sendNextQuestion, 3000);
             }
         } else {

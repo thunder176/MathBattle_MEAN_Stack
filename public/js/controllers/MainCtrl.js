@@ -1,10 +1,10 @@
-angular.module('MainCtrl', []).controller('MainController', function($scope, socketFactory) {
+angular.module('MainCtrl', []).controller('MainController', function($scope, socketFactory, $location, shareFactory) {
 
 	$scope.userLogin = function() {
 		if ('' != $scope.login.name) {
 			socketFactory.emit('userLogin', $scope.login.name);
-			location.href = '/Competitions';
+			shareFactory.setVal($scope.login.name);
+			$location.path('/Competitions');
 		}
-	}
-
+	};
 });
